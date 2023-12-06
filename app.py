@@ -9,8 +9,8 @@ def index():
 
 @app.route('/data', methods=['POST'])
 def data():
-    # This handles the POST request for the /data route
-    return "I am connected to the Flask app"
+    data = request.json  # or request.form for form data
+    return f"Received data: {data}"
 
 if __name__ == '__main__':
     app.run(debug=True)
