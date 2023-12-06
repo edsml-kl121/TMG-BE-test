@@ -46,7 +46,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "data": {
+                    "results": {
                       "type": "string",
                       "description": "The data retrieved from vectorDB"
                     }

@@ -12,7 +12,8 @@ def data():
     data = request.json  # or request.form for form data
     print(type(data))
     output = data["query"]
-    return f"Received data: {output}"
+    results = {"results": f"Received data: {output}"}
+    return results
 
 if __name__ == '__main__':
     app.run(debug=True)
