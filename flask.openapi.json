@@ -19,36 +19,44 @@
   ],
   "paths": {
     "/data": {
-      "get": {
-        "summary": "Return relevant data",
-        "description": "this path will give data to the next process",
-        "parameters":[
-           {
-            "in": "query",
-            "name": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The query parameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "You get the data",
-            "content": {
-              "application/json": {
-                "schema": {
-                    "type": "object",
-                        "properties":{
-                            "data":{
-                                "type": "string"
-                            }
-                        }
-                    
+      "post": {
+        "summary": "Post query to retrieve data",
+        "description": "This path will receive a query in JSON format and provide data from vectorDB",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "The query string to search in the vectorDB"
+                  }
                 }
               }
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "string",
+                      "description": "The data retrieved from vectorDB"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error"
           }
         }
       }
