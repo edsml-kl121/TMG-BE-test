@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://{local_url}",
+      "url": "https://flask.1a98b7b44g2g.us-south.codeengine.appdomain.cloud",
       "description": "IP address and port without encryption/authentication",
       "variables": {
         "local_url": {
