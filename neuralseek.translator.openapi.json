@@ -1,0 +1,114 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+      "title": "NeuralSeek Translation API",
+      "description": "API for translating text using NeuralSeek",
+      "version": "1.0.0"
+  },
+  "servers": [
+      {
+          "url": "https://api.neuralseek.com/v1",
+          "description": "NeuralSeek API server"
+      }
+  ],
+  "paths": {
+      "/crn%3Av1%3Abluemix%3Apublic%3Aneuralseek%3Aus-south%3Aa%2F5cc2bc0df70949899214657fef29775f%3A35574d2c-f83d-49af-8576-e13f393aa594%3A%3A/translate": {
+          "post": {
+              "summary": "Translate Text",
+              "description": "Translates the provided text into the specified target language.",
+              "operationId": "translateText",
+              "parameters": [
+                  {
+                      "name": "apikey",
+                      "in": "header",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      },
+                      "description": "API key for authorization"
+                  }
+              ],
+              "requestBody": {
+                  "required": true,
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "type": "object",
+                              "properties": {
+                                  "text": {
+                                      "type": "array",
+                                      "items": {
+                                          "type": "string"
+                                      },
+                                      "description": "Array of texts to be translated"
+                                  },
+                                  "target": {
+                                      "type": "string",
+                                      "description": "Target language for translation"
+                                  }
+                              }
+                          }
+                      }
+                  }
+              },
+              "responses": {
+                  "200": {
+                      "description": "Successful translation",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "type": "object",
+                                  "properties": {
+                                      "translations": {
+                                          "type": "array",
+                                          "items": {
+                                              "type": "string"
+                                          },
+                                          "description": "Array of translated texts"
+                                      },
+                                      "word_count": {
+                                          "type": "integer",
+                                          "description": "The word count of the input text"
+                                      },
+                                      "character_count": {
+                                          "type": "integer",
+                                          "description": "The character count of the input text"
+                                      },
+                                      "detected_language": {
+                                          "type": "string",
+                                          "description": "The language detected in the input text"
+                                      },
+                                      "detected_language_confidence": {
+                                          "type": "number",
+                                          "format": "float",
+                                          "description": "The confidence level of the detected language"
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  },
+                  "default": {
+                      "description": "Unexpected error",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "type": "object",
+                                  "properties": {
+                                      "code": {
+                                          "type": "integer",
+                                          "format": "int32"
+                                      },
+                                      "message": {
+                                          "type": "string"
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+      }
+  }
+}
