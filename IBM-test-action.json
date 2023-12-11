@@ -4,7 +4,7 @@
   "valid": true,
   "status": "Available",
   "created": "2023-12-06T10:12:36.783Z",
-  "updated": "2023-12-06T18:01:35.946Z",
+  "updated": "2023-12-07T13:54:55.350Z",
   "language": "en",
   "skill_id": "01d421a1-acb3-4986-98a2-ce832a2098c7",
   "workspace": {
@@ -21,7 +21,7 @@
                       "text_expression": {
                         "concat": [
                           {
-                            "scalar": "Hi I\n(1) Translate\n(2) Connect to flask"
+                            "scalar": "ฉันเป็น watsonxai bot ถามฉันมาเดี่ยวฉันไปดึงข้อมูลมาตอบให้"
                           }
                         ]
                       }
@@ -49,7 +49,7 @@
                       "text_expression": {
                         "concat": [
                           {
-                            "scalar": "Let's get started. Please enter the **Text** you want to translate from Thai to English"
+                            "scalar": "Enter your question:"
                           }
                         ]
                       }
@@ -97,13 +97,13 @@
                       "text_expression": {
                         "concat": [
                           {
-                            "scalar": "[\""
+                            "scalar": ""
                           },
                           {
                             "skill_variable": "query_text_test"
                           },
                           {
-                            "scalar": "\"] will be translated shortly ..."
+                            "scalar": " will be translated shortly ..."
                           }
                         ]
                       }
@@ -200,38 +200,20 @@
           {
             "step": "step_881",
             "output": {
-              "generic": [
-                {
-                  "values": [
-                    {
-                      "text_expression": {
-                        "concat": [
-                          {
-                            "scalar": "enter the text you want to connect to flask post request ..."
-                          }
-                        ]
-                      }
-                    }
-                  ],
-                  "response_type": "text",
-                  "selection_policy": "sequential"
-                }
-              ]
+              "generic": []
             },
             "context": {
               "variables": [
                 {
                   "value": {
-                    "scalar": "input.text"
+                    "variable": "step_311_result_1",
+                    "variable_path": "body.translations"
                   },
                   "skill_variable": "query_text"
                 }
               ]
             },
             "handlers": [],
-            "question": {
-              "free_text": true
-            },
             "resolver": {
               "type": "continue"
             },
@@ -255,13 +237,108 @@
                       "text_expression": {
                         "concat": [
                           {
-                            "scalar": "Great. I'm passing this information over to our system to get them added.\n\n<br />\n\n\n\n"
+                            "scalar": "Great, connecting to milvus..."
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "response_type": "text",
+                  "selection_policy": "sequential"
+                }
+              ]
+            },
+            "context": {
+              "variables": []
+            },
+            "handlers": [],
+            "resolver": {
+              "type": "callout",
+              "callout": {
+                "path": "/data",
+                "type": "integration_interaction",
+                "method": "POST",
+                "internal": {
+                  "spec_hash_id": "dc969ec97aa0e2a5fe10a8e06f13c491184aa3afe459ce97f68f0b04d2214a43",
+                  "catalog_item_id": "e543a7a9-5495-4e99-bcf3-782f9cb52452"
+                },
+                "request_mapping": {
+                  "body": [
+                    {
+                      "value": {
+                        "expression": "${query_text}.get(0)"
+                      },
+                      "parameter": "query"
+                    }
+                  ]
+                },
+                "result_variable": "step_443_result_1"
+              }
+            },
+            "variable": "step_443",
+            "next_step": "step_882"
+          },
+          {
+            "step": "step_882",
+            "output": {
+              "generic": [
+                {
+                  "values": [
+                    {
+                      "text_expression": {
+                        "concat": [
+                          {
+                            "scalar": "Sorry flask failed or time out"
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "response_type": "text",
+                  "selection_policy": "sequential"
+                }
+              ]
+            },
+            "handlers": [],
+            "resolver": {
+              "type": "continue"
+            },
+            "variable": "step_882",
+            "condition": {
+              "eq": [
+                {
+                  "variable": "step_443_result_1",
+                  "variable_path": "success"
+                },
+                {
+                  "scalar": false
+                }
+              ]
+            },
+            "next_step": "step_814"
+          },
+          {
+            "step": "step_814",
+            "output": {
+              "generic": [
+                {
+                  "values": [
+                    {
+                      "text_expression": {
+                        "concat": [
+                          {
+                            "scalar": "Flask status: "
                           },
                           {
-                            "skill_variable": "query_text_test"
+                            "variable": "step_443_result_1",
+                            "variable_path": "success"
                           },
                           {
-                            "scalar": " will receive response shortly"
+                            "scalar": "\n\nResults from Flask: "
+                          },
+                          {
+                            "variable": "step_443_result_1",
+                            "variable_path": "body.results"
                           }
                         ]
                       }
@@ -276,40 +353,36 @@
               "variables": [
                 {
                   "value": {
-                    "variable": "step_881"
+                    "variable": "step_443_result_1",
+                    "variable_path": "body.results"
                   },
-                  "skill_variable": "query_text_test"
+                  "skill_variable": "search_results"
                 }
               ]
             },
             "handlers": [],
             "resolver": {
-              "type": "callout",
-              "callout": {
-                "path": "/data",
-                "type": "integration_interaction",
-                "method": "POST",
-                "internal": {
-                  "spec_hash_id": "edf28c360758218ee839d2b5344cee14722a46b473a1901b2043eb29db3a2fe1",
-                  "catalog_item_id": "c8ee62bc-0f89-47ee-9299-143d06c9daf2"
-                },
-                "request_mapping": {
-                  "body": [
-                    {
-                      "value": {
-                        "skill_variable": "query_text_test"
-                      },
-                      "parameter": "query"
-                    }
-                  ]
-                },
-                "result_variable": "step_443_result_1"
+              "type": "invoke_another_action",
+              "invoke_action": {
+                "action": "action_20548-2",
+                "policy": "default",
+                "parameters": null,
+                "result_variable": "step_814_result_1"
               }
             },
-            "variable": "step_443"
+            "variable": "step_814",
+            "next_step": "step_897"
+          },
+          {
+            "step": "step_897",
+            "handlers": [],
+            "resolver": {
+              "type": "end_action"
+            },
+            "variable": "step_897"
           }
         ],
-        "title": "Add authorized user",
+        "title": "translate and Search Milvus",
         "action": "action_19091",
         "boosts": [],
         "handlers": [],
@@ -318,7 +391,7 @@
         },
         "variables": [
           {
-            "title": "Let's get started. Please enter the **Text** you want to transla",
+            "title": "Enter your question:",
             "privacy": {
               "enabled": false
             },
@@ -326,7 +399,7 @@
             "data_type": "any"
           },
           {
-            "title": "[\"{variable}\"] will be translated shortly ...",
+            "title": "{variable} will be translated shortly ...",
             "privacy": {
               "enabled": false
             },
@@ -349,7 +422,7 @@
             "data_type": "any"
           },
           {
-            "title": "Hi I (1) Translate (2) Connect to flask",
+            "title": "ฉันเป็น watsonxai bot ถามฉันมาเดี่ยวฉันไปดึงข้อมูลมาตอบให้",
             "privacy": {
               "enabled": false
             },
@@ -357,19 +430,61 @@
             "data_type": "any"
           },
           {
+            "title": "Great, connecting to milvus...",
+            "privacy": {
+              "enabled": false
+            },
             "variable": "step_443",
             "data_type": "any"
           },
           {
-            "title": "enter the text you want to connect to flask post request ...",
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_443_result_1",
+            "data_type": "any"
+          },
+          {
+            "title": "Flask status: {variable} Results from Flask: {variable}",
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_814",
+            "data_type": "any"
+          },
+          {
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_814_result_1",
+            "data_type": "any"
+          },
+          {
+            "title": "",
             "privacy": {
               "enabled": true
             },
             "variable": "step_881",
             "data_type": "any"
+          },
+          {
+            "title": "Sorry flask failed or time out",
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_882",
+            "data_type": "any"
+          },
+          {
+            "title": "No response",
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_897",
+            "data_type": "any"
           }
         ],
-        "next_action": "fallback",
+        "next_action": "action_5827",
         "topic_switch": {
           "allowed_from": true,
           "allowed_into": true
@@ -380,6 +495,9 @@
         "steps": [
           {
             "step": "step_291",
+            "output": {
+              "generic": []
+            },
             "context": {
               "variables": [
                 {
@@ -406,7 +524,7 @@
               "variables": [
                 {
                   "value": {
-                    "expression": "${search_results}.get(0).document_passages.get(0).passage_text"
+                    "expression": "${search_results}"
                   },
                   "skill_variable": "snippet"
                 },
@@ -423,20 +541,10 @@
               "type": "continue"
             },
             "variable": "step_167",
-            "condition": {
-              "and": [
-                {
-                  "expression": "${search_results}.size > 0"
-                },
-                {
-                  "expression": "${search_results}.get(0).document_passages.size > 0"
-                }
-              ]
-            },
-            "next_step": "step_239"
+            "next_step": "step_786"
           },
           {
-            "step": "step_239",
+            "step": "step_786",
             "output": {
               "generic": []
             },
@@ -444,13 +552,13 @@
               "variables": [
                 {
                   "value": {
-                    "expression": "${search_results}.get(1).document_passages.get(0).passage_text"
+                    "expression": "${search_results}"
                   },
                   "skill_variable": "snippet"
                 },
                 {
                   "value": {
-                    "expression": "${passages}.concat(\"    \").concat(${snippet})"
+                    "skill_variable": "snippet"
                   },
                   "skill_variable": "passages"
                 }
@@ -460,73 +568,44 @@
             "resolver": {
               "type": "continue"
             },
-            "variable": "step_239",
-            "condition": {
-              "and": [
-                {
-                  "expression": "${search_results}.size > 1"
-                },
-                {
-                  "expression": "${search_results}.get(1).document_passages.size > 0"
-                }
-              ]
-            },
-            "next_step": "step_982"
-          },
-          {
-            "step": "step_982",
-            "output": {
-              "generic": []
-            },
-            "context": {
-              "variables": [
-                {
-                  "value": {
-                    "expression": "${search_results}.get(2).document_passages.get(0).passage_text"
-                  },
-                  "skill_variable": "snippet"
-                },
-                {
-                  "value": {
-                    "expression": "${passages}.concat(\"    \").concat(${snippet})"
-                  },
-                  "skill_variable": "passages"
-                }
-              ]
-            },
-            "handlers": [],
-            "resolver": {
-              "type": "continue"
-            },
-            "variable": "step_982",
-            "condition": {
-              "and": [
-                {
-                  "expression": "${search_results}.size > 2"
-                },
-                {
-                  "expression": "${search_results}.get(2).document_passages.size > 0"
-                }
-              ]
-            },
+            "variable": "step_786",
             "next_step": "step_858"
           },
           {
             "step": "step_858",
             "output": {
-              "generic": []
+              "generic": [
+                {
+                  "values": [
+                    {
+                      "text_expression": {
+                        "concat": [
+                          {
+                            "scalar": "Query input: "
+                          },
+                          {
+                            "skill_variable": "query_text"
+                          },
+                          {
+                            "scalar": "\n\n<br />\n\n\n\nModel_input: "
+                          },
+                          {
+                            "skill_variable": "model_input"
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "response_type": "text",
+                  "selection_policy": "sequential"
+                }
+              ]
             },
             "context": {
               "variables": [
                 {
                   "value": {
-                    "expression": "${passages}.replaceAll(\"<em>\",\"\").replaceAll(\"</em>\",\"\")"
-                  },
-                  "skill_variable": "passages"
-                },
-                {
-                  "value": {
-                    "expression": "(\"Agent: Okay, I am awaiting your instructions\\nUser: Watson, here are your instructions:\\n1. You will be given a document that should be used to reply to user questions.\\n2. You should generate the next response using information available in the document.\\n3. If you can't find an answer, say \\\"I don't know\\\".\\n4. Your responses should not be long and just have about 1-2 sentences.\\n5. You should not repeat your answers.\\n6. Do not use any other knowledge.\\n\\nPlease repeat the instructions back to me so that I know you understood.\\n\\nAgent: Ok, here are my instructions:\\n\\n1. I will be given a document that should be used to reply to user questions.\\n2. I should generate the next response using information available in the document.\\n3. If you can't find an answer, say \\\"I don't know\\\".\\n4. My responses should not be long and just have about 5-6 sentences.\\n5. I should not repeat your answers.\\n6. I will not use any other knowledge.\\n\\nI am ready, please give me the document.\\n\\nUser: Here's the document: \\n\").concat(${passages}).concat(\"\\nAgent: I am ready to answer your questions from the document. I will not repeat answers I have given.\\nUser:\").concat(${query_text}).concat(\"\\n\\nAgent:\")"
+                    "expression": "(\"Agent: Okay, I am awaiting your instructions\\nUser: Watson, here are your instructions:\\n1. You will be given a document that should be used to reply to user questions.\\n2. You should generate the next response using information available in the document.\\n3. If you can't find an answer, say \\\"I don't know\\\".\\n4. Your responses should not be long and just have about 1-2 sentences.\\n5. You should not repeat your answers.\\n6. Do not use any other knowledge.\\n\\nPlease repeat the instructions back to me so that I know you understood.\\n\\nAgent: Ok, here are my instructions:\\n\\n1. I will be given a document that should be used to reply to user questions.\\n2. I should generate the next response using information available in the document.\\n3. If you can't find an answer, say \\\"I don't know\\\".\\n4. My responses should not be long and just have about 5-6 sentences.\\n5. I should not repeat your answers.\\n6. I will not use any other knowledge.\\n\\nI am ready, please give me the document.\\n\\nUser: Here's the document: \\n\").concat(\"${passages}\").concat(\"\\nAgent: I am ready to answer your questions from the document. I will not repeat answers I have given.\\nUser:\").concat(\"${query_text}.get(0)\").concat(\"\\n\\nAgent:\")"
                   },
                   "skill_variable": "model_input"
                 }
@@ -706,9 +785,82 @@
             },
             "handlers": [],
             "resolver": {
+              "type": "callout",
+              "callout": {
+                "path": "/crn%3Av1%3Abluemix%3Apublic%3Aneuralseek%3Aus-south%3Aa%2F5cc2bc0df70949899214657fef29775f%3A35574d2c-f83d-49af-8576-e13f393aa594%3A%3A/translate",
+                "type": "integration_interaction",
+                "method": "POST",
+                "internal": {
+                  "spec_hash_id": "967343e21a96b4c3af222f686f059a0ae9412716b757a0f30c2a8125366a2461",
+                  "catalog_item_id": "920463a4-4b9b-4232-9005-cbdb29e31f80"
+                },
+                "request_mapping": {
+                  "body": [
+                    {
+                      "value": {
+                        "expression": "[${model_response}]"
+                      },
+                      "parameter": "text"
+                    },
+                    {
+                      "value": {
+                        "scalar": "th"
+                      },
+                      "parameter": "target"
+                    }
+                  ],
+                  "header": [
+                    {
+                      "value": {
+                        "scalar": "8b6d67cb-c8b3fc2e-217bf80d-93efba41"
+                      },
+                      "parameter": "apikey"
+                    }
+                  ]
+                },
+                "result_variable": "step_525_result_1"
+              }
+            },
+            "variable": "step_525",
+            "next_step": "step_184"
+          },
+          {
+            "step": "step_184",
+            "output": {
+              "generic": [
+                {
+                  "values": [
+                    {
+                      "text_expression": {
+                        "concat": [
+                          {
+                            "scalar": "Success:"
+                          },
+                          {
+                            "variable": "step_525_result_1",
+                            "variable_path": "success"
+                          },
+                          {
+                            "scalar": "\n\nOutput: "
+                          },
+                          {
+                            "variable": "step_525_result_1",
+                            "variable_path": "body.translations"
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "response_type": "text",
+                  "selection_policy": "sequential"
+                }
+              ]
+            },
+            "handlers": [],
+            "resolver": {
               "type": "continue"
             },
-            "variable": "step_525"
+            "variable": "step_184"
           }
         ],
         "title": "Generate Answer",
@@ -721,6 +873,9 @@
         "variables": [
           {
             "title": "",
+            "privacy": {
+              "enabled": false
+            },
             "variable": "step_167",
             "data_type": "any"
           },
@@ -730,6 +885,14 @@
           },
           {
             "variable": "step_169_result_1",
+            "data_type": "any"
+          },
+          {
+            "title": "Success:{variable} Output: {variable}",
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_184",
             "data_type": "any"
           },
           {
@@ -749,11 +912,6 @@
             "data_type": "any"
           },
           {
-            "title": "",
-            "variable": "step_239",
-            "data_type": "any"
-          },
-          {
             "variable": "step_239_result_1",
             "data_type": "any"
           },
@@ -762,7 +920,10 @@
             "data_type": "any"
           },
           {
-            "title": "No response",
+            "title": "",
+            "privacy": {
+              "enabled": false
+            },
             "variable": "step_291",
             "data_type": "any"
           },
@@ -789,7 +950,17 @@
           },
           {
             "title": "{variable}",
+            "privacy": {
+              "enabled": false
+            },
             "variable": "step_525",
+            "data_type": "any"
+          },
+          {
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_525_result_1",
             "data_type": "any"
           },
           {
@@ -817,6 +988,17 @@
           },
           {
             "title": "",
+            "privacy": {
+              "enabled": true
+            },
+            "variable": "step_786",
+            "data_type": "any"
+          },
+          {
+            "title": "Query input: {variable} <br /> Model_input: {variable}",
+            "privacy": {
+              "enabled": false
+            },
             "variable": "step_858",
             "data_type": "any"
           },
@@ -833,16 +1015,11 @@
             "data_type": "any"
           },
           {
-            "title": "",
-            "variable": "step_982",
-            "data_type": "any"
-          },
-          {
             "variable": "step_982_result_1",
             "data_type": "any"
           }
         ],
-        "next_action": "action_44059-2",
+        "next_action": "action_20548-2-2",
         "topic_switch": {
           "allowed_from": true,
           "allowed_into": true
@@ -861,8 +1038,8 @@
                 "type": "integration_interaction",
                 "method": "POST",
                 "internal": {
-                  "spec_hash_id": null,
-                  "catalog_item_id": null
+                  "spec_hash_id": "cc50493e455de183d661b95360196ddb468a02051add6dcaf4a6479b34900be5",
+                  "catalog_item_id": "94291da7-ebe2-4c57-9f40-b4bec35babbc"
                 },
                 "request_mapping": {
                   "body": [
@@ -951,20 +1128,13 @@
             },
             "variable": "step_930",
             "condition": {
-              "and": [
+              "eq": [
                 {
-                  "eq": [
-                    {
-                      "variable": "step_796_result_1",
-                      "variable_path": "success"
-                    },
-                    {
-                      "scalar": true
-                    }
-                  ]
+                  "variable": "step_796_result_1",
+                  "variable_path": "success"
                 },
                 {
-                  "expression": "${step_796_result_1.body.results}.size() > 0"
+                  "scalar": true
                 }
               ]
             },
@@ -1098,157 +1268,148 @@
       {
         "steps": [
           {
-            "step": "step_774",
+            "step": "step_884",
             "output": {
-              "generic": []
-            },
-            "context": {
-              "variables": [
+              "generic": [
                 {
-                  "value": {
-                    "expression": "input.original_text"
-                  },
-                  "skill_variable": "query_text"
+                  "values": [
+                    {
+                      "text_expression": {
+                        "concat": [
+                          {
+                            "scalar": "Here are some contacts 08xxxxxxx"
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "response_type": "text",
+                  "selection_policy": "sequential"
                 }
               ]
             },
             "handlers": [],
+            "question": {
+              "free_text": true
+            },
             "resolver": {
               "type": "continue"
             },
-            "variable": "step_774",
-            "next_step": "step_983"
+            "variable": "step_884",
+            "next_step": "step_804"
           },
           {
-            "step": "step_983",
+            "step": "step_804",
             "output": {
               "generic": []
             },
-            "context": {
-              "variables": [
+            "handlers": [],
+            "resolver": {
+              "type": "end_action"
+            },
+            "variable": "step_804"
+          }
+        ],
+        "title": "contact",
+        "action": "action_32107",
+        "boosts": [],
+        "handlers": [],
+        "condition": {
+          "intent": "action_32107_intent_36908"
+        },
+        "variables": [
+          {
+            "title": "No response",
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_804",
+            "data_type": "any"
+          },
+          {
+            "title": "Here are some contacts 08xxxxxxx",
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_884",
+            "data_type": "any"
+          }
+        ],
+        "launch_mode": "learning",
+        "next_action": "action_20548-2",
+        "topic_switch": {
+          "allowed_from": true,
+          "allowed_into": true,
+          "never_return": false
+        },
+        "disambiguation_opt_out": false
+      },
+      {
+        "steps": [
+          {
+            "step": "step_988",
+            "output": {
+              "generic": [
                 {
-                  "value": {
-                    "expression": "input.text"
-                  },
-                  "skill_variable": "query_text"
+                  "values": [
+                    {
+                      "text_expression": {
+                        "concat": [
+                          {
+                            "scalar": "To receive a copy of your salary account records, please enter your **email** **address** below."
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "response_type": "text",
+                  "selection_policy": "sequential"
                 }
               ]
             },
-            "handlers": [],
-            "resolver": {
-              "type": "continue"
-            },
-            "variable": "step_983",
-            "condition": {
-              "not": {
-                "exists": {
-                  "skill_variable": "query_text"
-                }
-              }
-            },
-            "next_step": "step_474"
-          },
-          {
-            "step": "step_474",
-            "output": {
-              "generic": []
-            },
-            "context": {
-              "variables": []
-            },
-            "handlers": [],
-            "resolver": {
-              "type": "callout",
-              "callout": {
-                "path": "/v2/projects/{project_id}/query",
-                "type": "integration_interaction",
-                "method": "POST",
-                "internal": {
-                  "spec_hash_id": null,
-                  "catalog_item_id": null
-                },
-                "request_mapping": {
-                  "body": [
+            "handlers": [
+              {
+                "type": "not_found",
+                "title": "validation_not_found_handler",
+                "output": {
+                  "generic": [
                     {
-                      "value": {
-                        "expression": "3"
-                      },
-                      "parameter": "count"
-                    },
-                    {
-                      "value": {
-                        "expression": "[\"title\",\"metadata.source.url\"]"
-                      },
-                      "parameter": "return"
-                    },
-                    {
-                      "value": {
-                        "expression": "[\"text\"]"
-                      },
-                      "parameter": "passages.fields"
-                    },
-                    {
-                      "value": {
-                        "expression": "true"
-                      },
-                      "parameter": "passages.enabled"
-                    },
-                    {
-                      "value": {
-                        "expression": "250"
-                      },
-                      "parameter": "passages.characters"
-                    },
-                    {
-                      "value": {
-                        "expression": "true"
-                      },
-                      "parameter": "passages.find_answers"
-                    },
-                    {
-                      "value": {
-                        "expression": "false"
-                      },
-                      "parameter": "table_results.enabled"
-                    },
-                    {
-                      "value": {
-                        "skill_variable": "query_text"
-                      },
-                      "parameter": "natural_language_query"
-                    },
-                    {
-                      "value": {
-                        "scalar": true
-                      },
-                      "parameter": "passages.per_document"
-                    }
-                  ],
-                  "path": [
-                    {
-                      "value": {
-                        "skill_variable": "discovery_project_id"
-                      },
-                      "parameter": "project_id"
-                    }
-                  ],
-                  "query": [
-                    {
-                      "value": {
-                        "skill_variable": "discovery_date_version"
-                      },
-                      "parameter": "version"
+                      "values": [
+                        {
+                          "text": "Please enter a valid email address."
+                        }
+                      ],
+                      "response_type": "text"
                     }
                   ]
                 },
-                "result_variable": "step_474_result_2"
+                "handler": "validation_not_found_handler",
+                "resolver": {
+                  "type": "prompt_again"
+                },
+                "next_handler": "validation_not_found_max_tries_handler"
+              },
+              {
+                "type": "not_found_max_tries",
+                "title": "validation_not_found_max_tries_handler",
+                "handler": "validation_not_found_max_tries_handler",
+                "resolver": {
+                  "type": "fallback"
+                }
               }
+            ],
+            "question": {
+              "entity": "entity_35859",
+              "max_tries": 3
             },
-            "variable": "step_474",
-            "next_step": "step_105"
+            "resolver": {
+              "type": "continue"
+            },
+            "variable": "step_988",
+            "next_step": "step_662"
           },
           {
-            "step": "step_105",
+            "step": "step_662",
             "output": {
               "generic": [
                 {
@@ -1257,7 +1418,7 @@
                       "text_expression": {
                         "concat": [
                           {
-                            "scalar": "Sorry, the search failed!"
+                            "scalar": "Great. Next, please enter your **date of birth** in MM-DD-YYYY format."
                           }
                         ]
                       }
@@ -1265,32 +1426,55 @@
                   ],
                   "response_type": "text",
                   "selection_policy": "sequential"
+                },
+                {
+                  "response_type": "date"
                 }
               ]
             },
-            "context": {
-              "variables": []
+            "handlers": [
+              {
+                "type": "not_found",
+                "title": "validation_not_found_handler",
+                "output": {
+                  "generic": [
+                    {
+                      "values": [
+                        {
+                          "text": "Please enter a valid date of birth in MM-DD-YYYY format."
+                        }
+                      ],
+                      "response_type": "text"
+                    }
+                  ]
+                },
+                "handler": "validation_not_found_handler",
+                "resolver": {
+                  "type": "prompt_again"
+                },
+                "next_handler": "validation_not_found_max_tries_handler"
+              },
+              {
+                "type": "not_found_max_tries",
+                "title": "validation_not_found_max_tries_handler",
+                "handler": "validation_not_found_max_tries_handler",
+                "resolver": {
+                  "type": "fallback"
+                }
+              }
+            ],
+            "question": {
+              "entity": "sys-date",
+              "max_tries": 3
             },
-            "handlers": [],
             "resolver": {
               "type": "continue"
             },
-            "variable": "step_105",
-            "condition": {
-              "eq": [
-                {
-                  "variable": "step_474_result_2",
-                  "variable_path": "success"
-                },
-                {
-                  "scalar": false
-                }
-              ]
-            },
-            "next_step": "step_782"
+            "variable": "step_662",
+            "next_step": "step_116"
           },
           {
-            "step": "step_782",
+            "step": "step_116",
             "output": {
               "generic": [
                 {
@@ -1299,7 +1483,7 @@
                       "text_expression": {
                         "concat": [
                           {
-                            "scalar": "Sorry, the search failed!"
+                            "scalar": "Alright. Finally, did you have a specific **time period** in mind?"
                           }
                         ]
                       }
@@ -1307,78 +1491,134 @@
                   ],
                   "response_type": "text",
                   "selection_policy": "sequential"
+                },
+                {
+                  "options": [
+                    {
+                      "label": "last 1 month",
+                      "value": {
+                        "input": {
+                          "text": "last 1 month"
+                        }
+                      }
+                    },
+                    {
+                      "label": "last 3 months",
+                      "value": {
+                        "input": {
+                          "text": "last 3 months"
+                        }
+                      }
+                    },
+                    {
+                      "label": "last 6 months",
+                      "value": {
+                        "input": {
+                          "text": "last 6 months"
+                        }
+                      }
+                    },
+                    {
+                      "label": "last 12 months",
+                      "value": {
+                        "input": {
+                          "text": "last 12 months"
+                        }
+                      }
+                    },
+                    {
+                      "label": "beginning of account opening",
+                      "value": {
+                        "input": {
+                          "text": "beginning of account opening"
+                        }
+                      }
+                    },
+                    {
+                      "label": "I'd like to input a specific date range.",
+                      "value": {
+                        "input": {
+                          "text": "I'd like to input a specific date range."
+                        }
+                      }
+                    }
+                  ],
+                  "response_type": "option",
+                  "repeat_on_reprompt": true
                 }
               ]
             },
-            "context": {
-              "variables": []
+            "handlers": [
+              {
+                "type": "not_found",
+                "title": "validation_not_found_handler",
+                "output": {
+                  "generic": [
+                    {
+                      "values": [
+                        {
+                          "text": "I didn't catch that. Select a valid option:"
+                        }
+                      ],
+                      "response_type": "text"
+                    }
+                  ]
+                },
+                "handler": "validation_not_found_handler",
+                "resolver": {
+                  "type": "prompt_again"
+                },
+                "next_handler": "validation_not_found_max_tries_handler"
+              },
+              {
+                "type": "not_found_max_tries",
+                "title": "validation_not_found_max_tries_handler",
+                "handler": "validation_not_found_max_tries_handler",
+                "resolver": {
+                  "type": "fallback"
+                }
+              }
+            ],
+            "question": {
+              "entity": "entity_26452",
+              "max_tries": 3
             },
-            "handlers": [],
             "resolver": {
               "type": "continue"
             },
-            "variable": "step_782",
-            "condition": {
-              "eq": [
-                {
-                  "variable": "step_474_result_2",
-                  "variable_path": "success"
-                },
-                {
-                  "scalar": false
-                }
-              ]
-            },
-            "next_step": "step_237"
+            "variable": "step_116",
+            "next_step": "step_686"
           },
           {
-            "step": "step_237",
+            "step": "step_686",
             "output": {
-              "generic": []
-            },
-            "context": {
-              "variables": [
+              "generic": [
                 {
-                  "value": {
-                    "expression": "${step_474_result_2}.body.results"
-                  },
-                  "skill_variable": "search_results"
-                }
-              ]
-            },
-            "handlers": [],
-            "resolver": {
-              "type": "invoke_another_action",
-              "invoke_action": {
-                "action": "action_20548-2",
-                "policy": "default",
-                "parameters": null,
-                "result_variable": "step_237_result_2"
-              }
-            },
-            "variable": "step_237",
-            "condition": {
-              "eq": [
-                {
-                  "variable": "step_474_result_2",
-                  "variable_path": "success"
-                },
-                {
-                  "scalar": true
-                }
-              ]
-            },
-            "next_step": "step_195"
-          },
-          {
-            "step": "step_195",
-            "context": {
-              "variables": [
-                {
-                  "value": {
-                    "expression": "${step_474_result_2}.body.results=[]"
-                  },
-                  "skill_variable": "search_results"
+                  "values": [
+                    {
+                      "text_expression": {
+                        "concat": [
+                          {
+                            "scalar": "Thanks! You'll be receiving a copy of your account statement from the **"
+                          },
+                          {
+                            "variable": "step_116"
+                          },
+                          {
+                            "scalar": "** via your email at **"
+                          },
+                          {
+                            "variable": "step_988"
+                          },
+                          {
+                            "scalar": "** in the next few minutes."
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "response_type": "text",
+                  "selection_policy": "sequential"
                 }
               ]
             },
@@ -1386,165 +1626,273 @@
             "resolver": {
               "type": "end_action"
             },
-            "variable": "step_195"
+            "variable": "step_686",
+            "condition": {
+              "neq": [
+                {
+                  "variable": "step_116"
+                },
+                {
+                  "value": "I'd like to input a specific date range.",
+                  "from_entity": "entity_26452"
+                }
+              ]
+            },
+            "next_step": "step_826"
+          },
+          {
+            "step": "step_826",
+            "output": {
+              "generic": [
+                {
+                  "values": [
+                    {
+                      "text_expression": {
+                        "concat": [
+                          {
+                            "scalar": "Sounds good. Please enter the **start date** in which you'd like to access your salary account statement."
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "response_type": "text",
+                  "selection_policy": "sequential"
+                },
+                {
+                  "response_type": "date"
+                }
+              ]
+            },
+            "handlers": [
+              {
+                "type": "not_found",
+                "title": "validation_not_found_handler",
+                "output": {
+                  "generic": [
+                    {
+                      "values": [
+                        {
+                          "text": "Please enter a valid date in MM-DD-YYYY format."
+                        }
+                      ],
+                      "response_type": "text"
+                    }
+                  ]
+                },
+                "handler": "validation_not_found_handler",
+                "resolver": {
+                  "type": "prompt_again"
+                },
+                "next_handler": "validation_not_found_max_tries_handler"
+              },
+              {
+                "type": "not_found_max_tries",
+                "title": "validation_not_found_max_tries_handler",
+                "handler": "validation_not_found_max_tries_handler",
+                "resolver": {
+                  "type": "fallback"
+                }
+              }
+            ],
+            "question": {
+              "entity": "sys-date",
+              "max_tries": 3
+            },
+            "resolver": {
+              "type": "continue"
+            },
+            "variable": "step_826",
+            "condition": {
+              "eq": [
+                {
+                  "variable": "step_116"
+                },
+                {
+                  "value": "I'd like to input a specific date range.",
+                  "from_entity": "entity_26452"
+                }
+              ]
+            },
+            "next_step": "step_553"
+          },
+          {
+            "step": "step_553",
+            "output": {
+              "generic": [
+                {
+                  "values": [
+                    {
+                      "text_expression": {
+                        "concat": [
+                          {
+                            "scalar": "Now, enter the **end date**."
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "response_type": "text",
+                  "selection_policy": "sequential"
+                },
+                {
+                  "response_type": "date"
+                }
+              ]
+            },
+            "handlers": [
+              {
+                "type": "not_found",
+                "title": "validation_not_found_handler",
+                "output": {
+                  "generic": [
+                    {
+                      "values": [
+                        {
+                          "text": "Please enter a valid date in MM-DD-YYYY format."
+                        }
+                      ],
+                      "response_type": "text"
+                    }
+                  ]
+                },
+                "handler": "validation_not_found_handler",
+                "resolver": {
+                  "type": "prompt_again"
+                },
+                "next_handler": "validation_not_found_max_tries_handler"
+              },
+              {
+                "type": "not_found_max_tries",
+                "title": "validation_not_found_max_tries_handler",
+                "handler": "validation_not_found_max_tries_handler",
+                "resolver": {
+                  "type": "fallback"
+                }
+              }
+            ],
+            "question": {
+              "entity": "sys-date",
+              "max_tries": 3
+            },
+            "resolver": {
+              "type": "continue"
+            },
+            "variable": "step_553",
+            "next_step": "step_723"
+          },
+          {
+            "step": "step_723",
+            "output": {
+              "generic": [
+                {
+                  "values": [
+                    {
+                      "text_expression": {
+                        "concat": [
+                          {
+                            "scalar": "Thank you for the information.  You'll be receiving a copy of your account statement from **"
+                          },
+                          {
+                            "variable": "step_826"
+                          },
+                          {
+                            "scalar": "** to **"
+                          },
+                          {
+                            "variable": "step_553"
+                          },
+                          {
+                            "scalar": "** via your email at **"
+                          },
+                          {
+                            "variable": "step_988"
+                          },
+                          {
+                            "scalar": "** in the next few minutes."
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "response_type": "text",
+                  "selection_policy": "sequential"
+                }
+              ]
+            },
+            "handlers": [],
+            "resolver": {
+              "type": "connect_to_agent",
+              "response": {
+                "transfer_info": {
+                  "target": {}
+                },
+                "agent_available": {
+                  "message": "Let's send you to an available agent."
+                },
+                "agent_unavailable": {
+                  "message": "There are no agents available at this time. When one becomes available, we'll connect you."
+                },
+                "message_to_human_agent": ""
+              }
+            },
+            "variable": "step_723"
           }
         ],
-        "title": "Search",
-        "action": "action_44059-2",
+        "title": "Access customer records",
+        "action": "action_5827",
         "boosts": [],
         "handlers": [],
         "condition": {
-          "intent": "action_47312_intent_17298-2"
+          "intent": "action_5827_intent_33789"
         },
         "variables": [
           {
-            "variable": "step_001_result_1",
+            "title": "Alright. Finally, did you have a specific **time period** in min",
+            "variable": "step_116",
             "data_type": "any"
           },
           {
-            "title": "Sorry, the search failed!",
-            "variable": "step_105",
+            "title": "Now, enter the **end date**.",
+            "variable": "step_553",
+            "data_type": "date"
+          },
+          {
+            "title": "Great. Next, please enter your **date of birth** in MM-DD-YYYY f",
+            "variable": "step_662",
+            "data_type": "date"
+          },
+          {
+            "title": "Thanks! You'll be receiving a copy of your account statement fro",
+            "variable": "step_686",
             "data_type": "any"
           },
           {
-            "variable": "step_117_result_1",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_146_result_1",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_164_result_1",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_167_result_1",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_169_result_1",
-            "data_type": "any"
-          },
-          {
-            "title": "No response",
-            "variable": "step_195",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_222_result_1",
-            "data_type": "any"
-          },
-          {
-            "title": "",
-            "variable": "step_237",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_237_result_1",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_237_result_2",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_249_result_1",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_272_result_2",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_286_result_1",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_338_result_1",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_418_result_2",
-            "data_type": "any"
-          },
-          {
-            "title": "No response",
-            "variable": "step_474",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_474_result_1",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_474_result_2",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_492_result_1",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_543_result_1",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_597_result_1",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_748_result_1",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_749_result_1",
-            "data_type": "any"
-          },
-          {
-            "title": "",
-            "variable": "step_774",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_774_result_2",
-            "data_type": "any"
-          },
-          {
-            "title": "Sorry, the search failed!",
+            "title": "Thank you for the information. You'll be receiving a copy of you",
             "privacy": {
-              "enabled": true
+              "enabled": false
             },
-            "variable": "step_782",
+            "variable": "step_723",
             "data_type": "any"
           },
           {
-            "variable": "step_829_result_1",
-            "data_type": "any"
+            "title": "Sounds good. Please enter the **start date** in which you'd like",
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_826",
+            "data_type": "date"
           },
           {
-            "variable": "step_863_result_1",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_876_result_1",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_896_result_1",
-            "data_type": "any"
-          },
-          {
-            "variable": "step_978_result_1",
-            "data_type": "any"
-          },
-          {
-            "title": "No response",
-            "variable": "step_983",
+            "title": "To receive a copy of your salary account records, please enter y",
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_988",
             "data_type": "any"
           }
         ],
-        "next_action": "action_20548-2-2",
+        "next_action": "fallback",
         "topic_switch": {
           "allowed_from": true,
           "allowed_into": true
@@ -1554,18 +1902,18 @@
       {
         "steps": [
           {
-            "step": "step_558",
+            "step": "step_913",
             "handlers": [],
             "resolver": {
               "type": "invoke_another_action_and_end",
               "invoke_action": {
-                "action": "action_44059-2",
+                "action": "action_19091",
                 "policy": "default",
                 "parameters": null,
-                "result_variable": "step_558_result_1"
+                "result_variable": "step_913_result_1"
               }
             },
-            "variable": "step_558",
+            "variable": "step_913",
             "next_step": "step_001"
           },
           {
@@ -1661,11 +2009,17 @@
           },
           {
             "title": "No response",
-            "variable": "step_558",
+            "privacy": {
+              "enabled": true
+            },
+            "variable": "step_913",
             "data_type": "any"
           },
           {
-            "variable": "step_558_result_1",
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_913_result_1",
             "data_type": "any"
           }
         ],
@@ -2062,7 +2416,13 @@
                 {
                   "values": [
                     {
-                      "text": "Welcome, how can I assist you?"
+                      "text_expression": {
+                        "concat": [
+                          {
+                            "scalar": "Welcome, how can I assist you? \nฉันเป็น HR Policy Bot สามารถช่วยคุณได้เพียงแค่ถามมา"
+                          }
+                        ]
+                      }
                     }
                   ],
                   "response_type": "text",
@@ -2086,11 +2446,15 @@
         },
         "variables": [
           {
+            "title": "Welcome, how can I assist you? ฉันเป็น HR Policy Bot สามารถช่วยค",
+            "privacy": {
+              "enabled": false
+            },
             "variable": "step_001",
             "data_type": "any"
           }
         ],
-        "next_action": "action_20548-2",
+        "next_action": "action_32107",
         "disambiguation_opt_out": true
       }
     ],
@@ -2099,64 +2463,30 @@
         "intent": "action_19091_intent_36034",
         "examples": [
           {
-            "text": "Add an authorized user"
+            "text": "how many days can I leave?"
           },
           {
-            "text": "Add new user please"
+            "text": "HR policy"
           },
           {
-            "text": "Add user"
+            "text": "maternity leave"
           },
           {
-            "text": "Can I add another person to have authority over my account?"
+            "text": "การลาของพนักงาน"
+          }
+        ]
+      },
+      {
+        "intent": "action_32107_intent_36908",
+        "examples": [
+          {
+            "text": "contact"
           },
           {
-            "text": "Can I add another user?"
+            "text": "please call xyz for me"
           },
           {
-            "text": "Can you help me add another user to this account?"
-          },
-          {
-            "text": "Grant someone access to my account"
-          },
-          {
-            "text": "Hi, how can I add a user so he can have all the access to my account?"
-          },
-          {
-            "text": "I'd like to add a person to my account"
-          },
-          {
-            "text": "I need to add someone to my account settings."
-          },
-          {
-            "text": "I want to add a new user who can make changes to and use the account"
-          },
-          {
-            "text": "I want to add a secondary user to my account"
-          },
-          {
-            "text": "I want to add my roommate to my plan"
-          },
-          {
-            "text": "I want to add my wife to the account"
-          },
-          {
-            "text": "I want to add someone who can access my account."
-          },
-          {
-            "text": "I would like to add an authorized user to my account."
-          },
-          {
-            "text": "I would like to add my son to my account. I want him to be able to access the account and to make any changes he needs. can you help me with this?"
-          },
-          {
-            "text": "I would like to add my wife to my account with access and management privileges"
-          },
-          {
-            "text": "I would like to add someone to my account who will be authorized to access the account and make changes."
-          },
-          {
-            "text": "Please update my account to allow my spouse to access the account?"
+            "text": "telephone call"
           }
         ]
       },
@@ -2169,8 +2499,39 @@
         "examples": []
       },
       {
-        "intent": "action_47312_intent_17298-2",
-        "examples": []
+        "intent": "action_5827_intent_33789",
+        "examples": [
+          {
+            "text": "access customer records"
+          },
+          {
+            "text": "access my account history"
+          },
+          {
+            "text": "check account activity"
+          },
+          {
+            "text": "download statements"
+          },
+          {
+            "text": "history of my account"
+          },
+          {
+            "text": "see my account statement"
+          },
+          {
+            "text": "send me my statements"
+          },
+          {
+            "text": "send statements"
+          },
+          {
+            "text": "เงินเดือนของฉัน"
+          },
+          {
+            "text": "ประหวัดเงินเดือน"
+          }
+        ]
       },
       {
         "intent": "fallback_connect_to_agent",
@@ -2214,6 +2575,26 @@
         "fuzzy_match": true
       },
       {
+        "entity": "entity_19645",
+        "values": [
+          {
+            "type": "synonyms",
+            "value": "Checking account",
+            "synonyms": [
+              "Checking"
+            ]
+          },
+          {
+            "type": "synonyms",
+            "value": "Savings account",
+            "synonyms": [
+              "Savings"
+            ]
+          }
+        ],
+        "fuzzy_match": true
+      },
+      {
         "entity": "entity_25899",
         "values": [
           {
@@ -2221,6 +2602,120 @@
             "value": "Email",
             "patterns": [
               "\\b(?:[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[A-Za-z0-9-]*[A-Za-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])\\b"
+            ]
+          }
+        ],
+        "fuzzy_match": true
+      },
+      {
+        "entity": "entity_26452",
+        "values": [
+          {
+            "type": "synonyms",
+            "value": "beginning of account opening",
+            "synonyms": [
+              "since the start of my account"
+            ]
+          },
+          {
+            "type": "synonyms",
+            "value": "I'd like to input a specific date range.",
+            "synonyms": [
+              "custom date range"
+            ]
+          },
+          {
+            "type": "synonyms",
+            "value": "last 12 months",
+            "synonyms": [
+              "every year",
+              "yearly"
+            ]
+          },
+          {
+            "type": "synonyms",
+            "value": "last 1 month",
+            "synonyms": [
+              "monthly"
+            ]
+          },
+          {
+            "type": "synonyms",
+            "value": "last 3 months",
+            "synonyms": [
+              "every 3 months"
+            ]
+          },
+          {
+            "type": "synonyms",
+            "value": "last 6 months",
+            "synonyms": [
+              "every 6 months"
+            ]
+          }
+        ],
+        "fuzzy_match": true
+      },
+      {
+        "entity": "entity_27548",
+        "values": [
+          {
+            "type": "patterns",
+            "value": "Email",
+            "patterns": [
+              "\\b(?:[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[A-Za-z0-9-]*[A-Za-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])\\b"
+            ]
+          }
+        ],
+        "fuzzy_match": true
+      },
+      {
+        "entity": "entity_27660",
+        "values": [
+          {
+            "type": "patterns",
+            "value": "Regular_expression",
+            "patterns": [
+              "\"^(?:.*[a-z])(?:.*[A-Z])(?:.*\\d)(?:.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$\""
+            ]
+          }
+        ],
+        "fuzzy_match": true
+      },
+      {
+        "entity": "entity_35859",
+        "values": [
+          {
+            "type": "patterns",
+            "value": "Email",
+            "patterns": [
+              "\\b(?:[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[A-Za-z0-9-]*[A-Za-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])\\b"
+            ]
+          }
+        ],
+        "fuzzy_match": true
+      },
+      {
+        "entity": "entity_39542",
+        "values": [
+          {
+            "type": "patterns",
+            "value": "Email",
+            "patterns": [
+              "\\b(?:[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[A-Za-z0-9-]*[A-Za-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])\\b"
+            ]
+          }
+        ],
+        "fuzzy_match": true
+      },
+      {
+        "entity": "entity_48372",
+        "values": [
+          {
+            "type": "patterns",
+            "value": "Regular_expression",
+            "patterns": [
+              "\"^(?:.*[a-z])(?:.*[A-Z])(?:.*\\d)(?:.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$\""
             ]
           }
         ],
@@ -2279,12 +2774,24 @@
         "description": "You MUST set this value to the project ID of the Discovery project containing your data"
       },
       {
+        "title": "English_translated_text",
+        "privacy": {
+          "enabled": false
+        },
+        "variable": "English_translated_text",
+        "data_type": "string",
+        "description": ""
+      },
+      {
         "title": "model_id",
+        "privacy": {
+          "enabled": false
+        },
         "variable": "model_id",
         "data_type": "string",
         "description": "The ID of the model to be used for this user prompt. Please refer to the list of models at https://bam.res.ibm.com/docs/models",
         "initial_value": {
-          "scalar": "google/flan-ul2"
+          "scalar": "meta-llama/llama-2-70b-chat"
         }
       },
       {
@@ -2397,9 +2904,15 @@
       },
       {
         "title": "watsonx_project_id",
+        "privacy": {
+          "enabled": false
+        },
         "variable": "watsonx_project_id",
         "data_type": "any",
-        "description": "You MUST set this to your watsonx project id"
+        "description": "You MUST set this to your watsonx project id",
+        "initial_value": {
+          "scalar": "c951b048-363a-4762-abf8-6b01bbd07f21"
+        }
       }
     ],
     "data_types": [],

@@ -1,0 +1,73 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+      "title": "Sample API",
+      "description": "Get relevant data from vectorDB",
+      "version": "0.0.1"
+    },
+    "servers": [
+      {
+        "url": "https://customer-wa-demo.1aqmhhany2xq.us-south.codeengine.appdomain.cloud",
+        "description": "IP address and port without encryption/authentication",
+        "variables": {
+          "local_url": {
+            "default": "0.0.0.0:5000",
+            "description": "The portions of URL that follow http://"
+          }
+        }
+      }
+    ],
+    "paths": {
+      "/model_response": {
+        "post": {
+          "summary": "Post query and documents to retrieve data",
+          "description": "This path will receive a query and a set of documents in JSON format and provide data from vectorDB",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string",
+                      "description": "The query string to search in the vectorDB"
+                    },
+                    "documents": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "A list of documents to be used in conjunction with the query"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful response with data",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "results": {
+                        "type": "string",
+                        "description": "The data retrieved from vectorDB"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "default": {
+              "description": "Unexpected error"
+            }
+          }
+        }
+      }
+    }
+  }
+  
