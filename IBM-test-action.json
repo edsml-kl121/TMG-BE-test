@@ -4,7 +4,7 @@
   "valid": true,
   "status": "Available",
   "created": "2023-12-06T10:12:36.783Z",
-  "updated": "2023-12-07T13:54:55.350Z",
+  "updated": "2023-12-11T12:17:40.888Z",
   "language": "en",
   "skill_id": "01d421a1-acb3-4986-98a2-ce832a2098c7",
   "workspace": {
@@ -78,41 +78,12 @@
               "type": "continue"
             },
             "variable": "step_127",
-            "condition": {
-              "not": {
-                "exists": {
-                  "skill_variable": "query_text_test"
-                }
-              }
-            },
             "next_step": "step_311"
           },
           {
             "step": "step_311",
             "output": {
-              "generic": [
-                {
-                  "values": [
-                    {
-                      "text_expression": {
-                        "concat": [
-                          {
-                            "scalar": ""
-                          },
-                          {
-                            "skill_variable": "query_text_test"
-                          },
-                          {
-                            "scalar": " will be translated shortly ..."
-                          }
-                        ]
-                      }
-                    }
-                  ],
-                  "response_type": "text",
-                  "selection_policy": "sequential"
-                }
-              ]
+              "generic": []
             },
             "context": {
               "variables": [
@@ -175,7 +146,7 @@
                       "text_expression": {
                         "concat": [
                           {
-                            "scalar": "Translation results: "
+                            "scalar": "Intepreted as:\n\n\n\n"
                           },
                           {
                             "variable": "step_311_result_1",
@@ -218,35 +189,12 @@
               "type": "continue"
             },
             "variable": "step_881",
-            "condition": {
-              "not": {
-                "exists": {
-                  "skill_variable": "query_text"
-                }
-              }
-            },
             "next_step": "step_443"
           },
           {
             "step": "step_443",
             "output": {
-              "generic": [
-                {
-                  "values": [
-                    {
-                      "text_expression": {
-                        "concat": [
-                          {
-                            "scalar": "Great, connecting to milvus..."
-                          }
-                        ]
-                      }
-                    }
-                  ],
-                  "response_type": "text",
-                  "selection_policy": "sequential"
-                }
-              ]
+              "generic": []
             },
             "context": {
               "variables": []
@@ -259,8 +207,8 @@
                 "type": "integration_interaction",
                 "method": "POST",
                 "internal": {
-                  "spec_hash_id": "dc969ec97aa0e2a5fe10a8e06f13c491184aa3afe459ce97f68f0b04d2214a43",
-                  "catalog_item_id": "e543a7a9-5495-4e99-bcf3-782f9cb52452"
+                  "spec_hash_id": "469fe026917ff2f2a1969659ab32ffd01978f587d108cfc82f69e4b7c23f4505",
+                  "catalog_item_id": "218333f3-3e7c-427e-94d1-96f7de121dd6"
                 },
                 "request_mapping": {
                   "body": [
@@ -301,7 +249,7 @@
             },
             "handlers": [],
             "resolver": {
-              "type": "continue"
+              "type": "end_action"
             },
             "variable": "step_882",
             "condition": {
@@ -327,18 +275,7 @@
                       "text_expression": {
                         "concat": [
                           {
-                            "scalar": "Flask status: "
-                          },
-                          {
-                            "variable": "step_443_result_1",
-                            "variable_path": "success"
-                          },
-                          {
-                            "scalar": "\n\nResults from Flask: "
-                          },
-                          {
-                            "variable": "step_443_result_1",
-                            "variable_path": "body.results"
+                            "scalar": "Retrieved data from database..."
                           }
                         ]
                       }
@@ -375,6 +312,9 @@
           },
           {
             "step": "step_897",
+            "context": {
+              "variables": []
+            },
             "handlers": [],
             "resolver": {
               "type": "end_action"
@@ -382,7 +322,7 @@
             "variable": "step_897"
           }
         ],
-        "title": "translate and Search Milvus",
+        "title": "Search answers with watsonxai",
         "action": "action_19091",
         "boosts": [],
         "handlers": [],
@@ -399,7 +339,7 @@
             "data_type": "any"
           },
           {
-            "title": "{variable} will be translated shortly ...",
+            "title": "",
             "privacy": {
               "enabled": false
             },
@@ -414,7 +354,7 @@
             "data_type": "any"
           },
           {
-            "title": "Translation results: {variable}",
+            "title": "Intepreted as: {variable}",
             "privacy": {
               "enabled": false
             },
@@ -445,7 +385,7 @@
             "data_type": "any"
           },
           {
-            "title": "Flask status: {variable} Results from Flask: {variable}",
+            "title": "Retrieved data from database...",
             "privacy": {
               "enabled": false
             },
@@ -574,38 +514,13 @@
           {
             "step": "step_858",
             "output": {
-              "generic": [
-                {
-                  "values": [
-                    {
-                      "text_expression": {
-                        "concat": [
-                          {
-                            "scalar": "Query input: "
-                          },
-                          {
-                            "skill_variable": "query_text"
-                          },
-                          {
-                            "scalar": "\n\n<br />\n\n\n\nModel_input: "
-                          },
-                          {
-                            "skill_variable": "model_input"
-                          }
-                        ]
-                      }
-                    }
-                  ],
-                  "response_type": "text",
-                  "selection_policy": "sequential"
-                }
-              ]
+              "generic": []
             },
             "context": {
               "variables": [
                 {
                   "value": {
-                    "expression": "(\"Agent: Okay, I am awaiting your instructions\\nUser: Watson, here are your instructions:\\n1. You will be given a document that should be used to reply to user questions.\\n2. You should generate the next response using information available in the document.\\n3. If you can't find an answer, say \\\"I don't know\\\".\\n4. Your responses should not be long and just have about 1-2 sentences.\\n5. You should not repeat your answers.\\n6. Do not use any other knowledge.\\n\\nPlease repeat the instructions back to me so that I know you understood.\\n\\nAgent: Ok, here are my instructions:\\n\\n1. I will be given a document that should be used to reply to user questions.\\n2. I should generate the next response using information available in the document.\\n3. If you can't find an answer, say \\\"I don't know\\\".\\n4. My responses should not be long and just have about 5-6 sentences.\\n5. I should not repeat your answers.\\n6. I will not use any other knowledge.\\n\\nI am ready, please give me the document.\\n\\nUser: Here's the document: \\n\").concat(\"${passages}\").concat(\"\\nAgent: I am ready to answer your questions from the document. I will not repeat answers I have given.\\nUser:\").concat(\"${query_text}.get(0)\").concat(\"\\n\\nAgent:\")"
+                    "expression": "(\"\\<s\\>[INST] \\<\\<SYS\\>\\>\\nYou are communicating with Vella, a knowledgeable, respectful, and precise assistant. My purpose is to provide accurate answers based on the information found in the document you provided.\\nPlease adhere to the following guidelines:\\n1. Feel free to ask questions related to the document and I'll strive to deliver precise and relevant information.\\n2. If your question doesn't directly pertain to the document's content, I'll search our conversation history for a relevant response. If none is found, I'll say 'Please to ask me more detail'.\\n3. If a question's answer is irrelevant or unclear, I'll respond with 'I don't know' or request clarification.\\n4. For quick yes/no inquiries related to permissions, I'll provide concise responses along with document references.\\n5. To maintain context in follow-up questions, I will explicitly reference the previous question, using clear language such as 'it' to ensure coherent responses.\\n6. When answering questions about numbered or ordered lists, I'll use line breaks for clarity and follow any specific ordering requests.\\n7. To avoid redundancy, I'll keep track of your questions and provide concise, relevant answers. Feel free to ask follow-up questions for additional information.\\n8. If you wish to engage in casual conversation, simply say 'Hi' and I will respond to your name with a friendly greeting.\\nPlease ensure that your responses are clear and respectful. If you have any issues or need clarification, don't hesitate to ask.\\n\\<\\</SYS\\>\\>documents: \\n${passages}\n\\nInput: ${query_text}\n \\nOutput:\\n[/INST]\")"
                   },
                   "skill_variable": "model_input"
                 }
@@ -616,6 +531,28 @@
               "type": "continue"
             },
             "variable": "step_858",
+            "next_step": "step_869"
+          },
+          {
+            "step": "step_869",
+            "output": {
+              "generic": []
+            },
+            "context": {
+              "variables": [
+                {
+                  "value": {
+                    "expression": "(\"\\<s\\>[INST] \\<\\<SYS\\>\\>\\nYou are communicating with Vella, a knowledgeable, respectful, and precise assistant. My purpose is to provide accurate answers based on the information found in the document you provided.\\nPlease adhere to the following guidelines:\\n1. Feel free to ask questions related to the document and I'll strive to deliver precise and relevant information.\\n2. If your question doesn't directly pertain to the document's content, I'll search our conversation history for a relevant response. If none is found, I'll say 'Please to ask me more detail'.\\n3. If a question's answer is irrelevant or unclear, I'll respond with 'I don't know' or request clarification.\\n4. For quick yes/no inquiries related to permissions, I'll provide concise responses along with document references.\\n5. To maintain context in follow-up questions, I will explicitly reference the previous question, using clear language such as 'it' to ensure coherent responses.\\n6. When answering questions about numbered or ordered lists, I'll use line breaks for clarity and follow any specific ordering requests.\\n7. To avoid redundancy, I'll keep track of your questions and provide concise, relevant answers. Feel free to ask follow-up questions for additional information.\\n8. If you wish to engage in casual conversation, simply say 'Hi' and I will respond to your name with a friendly greeting.\\nPlease ensure that your responses are clear and respectful. If you have any issues or need clarification, don't hesitate to ask.\\n\\<\\</SYS\\>\\>documents: \\n${passages}\n\\nInput: ${query_text}\n \\nOutput:\\n[/INST]\")"
+                  },
+                  "skill_variable": "model_input"
+                }
+              ]
+            },
+            "handlers": [],
+            "resolver": {
+              "type": "continue"
+            },
+            "variable": "step_869",
             "next_step": "step_762"
           },
           {
@@ -667,6 +604,25 @@
           },
           {
             "step": "step_657",
+            "output": {
+              "generic": [
+                {
+                  "values": [
+                    {
+                      "text_expression": {
+                        "concat": [
+                          {
+                            "scalar": "Model Generating response..."
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "response_type": "text",
+                  "selection_policy": "sequential"
+                }
+              ]
+            },
             "handlers": [],
             "resolver": {
               "type": "invoke_another_action",
@@ -762,26 +718,7 @@
           {
             "step": "step_525",
             "output": {
-              "generic": [
-                {
-                  "values": [
-                    {
-                      "text_expression": {
-                        "concat": [
-                          {
-                            "scalar": ""
-                          },
-                          {
-                            "skill_variable": "model_response"
-                          }
-                        ]
-                      }
-                    }
-                  ],
-                  "response_type": "text",
-                  "selection_policy": "sequential"
-                }
-              ]
+              "generic": []
             },
             "handlers": [],
             "resolver": {
@@ -834,14 +771,7 @@
                       "text_expression": {
                         "concat": [
                           {
-                            "scalar": "Success:"
-                          },
-                          {
-                            "variable": "step_525_result_1",
-                            "variable_path": "success"
-                          },
-                          {
-                            "scalar": "\n\nOutput: "
+                            "scalar": ""
                           },
                           {
                             "variable": "step_525_result_1",
@@ -860,7 +790,26 @@
             "resolver": {
               "type": "continue"
             },
-            "variable": "step_184"
+            "variable": "step_184",
+            "next_step": "step_710"
+          },
+          {
+            "step": "step_710",
+            "context": {
+              "variables": [
+                {
+                  "value": {
+                    "expression": "\"\""
+                  },
+                  "skill_variable": "query_text"
+                }
+              ]
+            },
+            "handlers": [],
+            "resolver": {
+              "type": "end_action"
+            },
+            "variable": "step_710"
           }
         ],
         "title": "Generate Answer",
@@ -888,7 +837,7 @@
             "data_type": "any"
           },
           {
-            "title": "Success:{variable} Output: {variable}",
+            "title": "{variable}",
             "privacy": {
               "enabled": false
             },
@@ -949,7 +898,7 @@
             "data_type": "any"
           },
           {
-            "title": "{variable}",
+            "title": "",
             "privacy": {
               "enabled": false
             },
@@ -973,12 +922,26 @@
             "data_type": "any"
           },
           {
-            "title": "No response",
+            "title": "Model Generating response...",
+            "privacy": {
+              "enabled": false
+            },
             "variable": "step_657",
             "data_type": "any"
           },
           {
+            "privacy": {
+              "enabled": false
+            },
             "variable": "step_657_result_2",
+            "data_type": "any"
+          },
+          {
+            "title": "No response",
+            "privacy": {
+              "enabled": false
+            },
+            "variable": "step_710",
             "data_type": "any"
           },
           {
@@ -995,11 +958,19 @@
             "data_type": "any"
           },
           {
-            "title": "Query input: {variable} <br /> Model_input: {variable}",
+            "title": "",
             "privacy": {
               "enabled": false
             },
             "variable": "step_858",
+            "data_type": "any"
+          },
+          {
+            "title": "",
+            "privacy": {
+              "enabled": true
+            },
+            "variable": "step_869",
             "data_type": "any"
           },
           {
@@ -1051,7 +1022,7 @@
                     },
                     {
                       "value": {
-                        "skill_variable": "model_id"
+                        "scalar": "meta-llama/llama-2-13b-chat"
                       },
                       "parameter": "model_id"
                     },
@@ -1069,13 +1040,13 @@
                     },
                     {
                       "value": {
-                        "skill_variable": "model_parameters_max_new_tokens"
+                        "scalar": 1000
                       },
                       "parameter": "parameters.max_new_tokens"
                     },
                     {
                       "value": {
-                        "skill_variable": "model_parameters_min_new_tokens"
+                        "scalar": 10
                       },
                       "parameter": "parameters.min_new_tokens"
                     },
@@ -1110,7 +1081,29 @@
           {
             "step": "step_930",
             "output": {
-              "generic": []
+              "generic": [
+                {
+                  "values": [
+                    {
+                      "text_expression": {
+                        "concat": [
+                          {
+                            "scalar": ""
+                          },
+                          {
+                            "skill_variable": "model_response"
+                          },
+                          {
+                            "scalar": "\n\n<br />\n\n\n\nTranslating to Thai next..."
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "response_type": "text",
+                  "selection_policy": "sequential"
+                }
+              ]
             },
             "context": {
               "variables": [
@@ -1229,10 +1222,16 @@
           },
           {
             "title": "No response",
+            "privacy": {
+              "enabled": false
+            },
             "variable": "step_796",
             "data_type": "any"
           },
           {
+            "privacy": {
+              "enabled": false
+            },
             "variable": "step_796_result_1",
             "data_type": "any"
           },
@@ -1241,7 +1240,10 @@
             "data_type": "any"
           },
           {
-            "title": "",
+            "title": "{variable} <br /> Translating to Thai next...",
+            "privacy": {
+              "enabled": false
+            },
             "variable": "step_930",
             "data_type": "any"
           },
@@ -1262,85 +1264,6 @@
         "topic_switch": {
           "allowed_from": true,
           "allowed_into": true
-        },
-        "disambiguation_opt_out": false
-      },
-      {
-        "steps": [
-          {
-            "step": "step_884",
-            "output": {
-              "generic": [
-                {
-                  "values": [
-                    {
-                      "text_expression": {
-                        "concat": [
-                          {
-                            "scalar": "Here are some contacts 08xxxxxxx"
-                          }
-                        ]
-                      }
-                    }
-                  ],
-                  "response_type": "text",
-                  "selection_policy": "sequential"
-                }
-              ]
-            },
-            "handlers": [],
-            "question": {
-              "free_text": true
-            },
-            "resolver": {
-              "type": "continue"
-            },
-            "variable": "step_884",
-            "next_step": "step_804"
-          },
-          {
-            "step": "step_804",
-            "output": {
-              "generic": []
-            },
-            "handlers": [],
-            "resolver": {
-              "type": "end_action"
-            },
-            "variable": "step_804"
-          }
-        ],
-        "title": "contact",
-        "action": "action_32107",
-        "boosts": [],
-        "handlers": [],
-        "condition": {
-          "intent": "action_32107_intent_36908"
-        },
-        "variables": [
-          {
-            "title": "No response",
-            "privacy": {
-              "enabled": false
-            },
-            "variable": "step_804",
-            "data_type": "any"
-          },
-          {
-            "title": "Here are some contacts 08xxxxxxx",
-            "privacy": {
-              "enabled": false
-            },
-            "variable": "step_884",
-            "data_type": "any"
-          }
-        ],
-        "launch_mode": "learning",
-        "next_action": "action_20548-2",
-        "topic_switch": {
-          "allowed_from": true,
-          "allowed_into": true,
-          "never_return": false
         },
         "disambiguation_opt_out": false
       },
@@ -1599,19 +1522,19 @@
                       "text_expression": {
                         "concat": [
                           {
-                            "scalar": "Thanks! You'll be receiving a copy of your account statement from the **"
+                            "scalar": "#### **Previous Salary**\nThank you for the information. Below is your salary."
                           },
                           {
-                            "variable": "step_116"
+                            "scalar": "\n\n<br />\n\n\n\n<table>\n<thead>\n<tr style=\"border: 1px solid black;\">\n<th style=\"border: 1px solid black;\">Date</th>\n<th style=\"border: 1px solid black;\">Salary (Baht)</th>\n</tr>\n</thead>\n<tbody>\n<tr style=\"border: 1px solid black;\">\n<td style=\"border: 1px solid black;\">October 2023</td>\n<td style=\"border: 1px solid black;\">$ 50,"
                           },
                           {
-                            "scalar": "** via your email at **"
+                            "scalar": "000</td>\n</tr>\n<tr style=\"border: 1px solid black;\">\n<td style=\"border: 1px solid black;\">November 2023</td>\n<td style=\"border: 1px solid black;\">$ 50,000</td>\n</tr>\n\n<tr style=\"border: 1px solid black;\">\n<td style=\"border: 1px solid black;\">December 2023</td>\n<td style=\"border: 1px solid black;\"> --"
+                          },
+                          {
+                            "scalar": " </td>\n</tr>\n</tbody>\n</table>\n\n<br />\n\n\n\nYou'll also be receiving a copy of your account statement from your email "
                           },
                           {
                             "variable": "step_988"
-                          },
-                          {
-                            "scalar": "** in the next few minutes."
                           }
                         ]
                       }
@@ -1791,25 +1714,10 @@
                       "text_expression": {
                         "concat": [
                           {
-                            "scalar": "Thank you for the information.  You'll be receiving a copy of your account statement from **"
+                            "scalar": "Thank you for the information. Below is your salary.\n\n<br />\n\n\n\n| Date\n\n|Salary\n\n|\n| --- | --- |\n| Oct2023\n\n|$100k\n\n|\n| November2023\n\n|$200k\n\n|\n| Dec2023\n\n|-\n\n|\n\n<br />\n\n\n\nYou'll also be receiving a copy of your account statement from **5. Sounds good. Please enter the start date in which you'd like to access your salary account statement.** to **6. Now, enter the **end date**."
                           },
                           {
-                            "variable": "step_826"
-                          },
-                          {
-                            "scalar": "** to **"
-                          },
-                          {
-                            "variable": "step_553"
-                          },
-                          {
-                            "scalar": "** via your email at **"
-                          },
-                          {
-                            "variable": "step_988"
-                          },
-                          {
-                            "scalar": "** in the next few minutes."
+                            "scalar": "**via your email at **1. To receive a copy of your salary account records, please enter your email address below.** in the next few minutes."
                           }
                         ]
                       }
@@ -1839,7 +1747,7 @@
             "variable": "step_723"
           }
         ],
-        "title": "Access customer records",
+        "title": "Employee salary record",
         "action": "action_5827",
         "boosts": [],
         "handlers": [],
@@ -1863,12 +1771,15 @@
             "data_type": "date"
           },
           {
-            "title": "Thanks! You'll be receiving a copy of your account statement fro",
+            "title": "#### **Previous Salary** Thank you for the information. Below is",
+            "privacy": {
+              "enabled": false
+            },
             "variable": "step_686",
             "data_type": "any"
           },
           {
-            "title": "Thank you for the information. You'll be receiving a copy of you",
+            "title": "Thank you for the information. Below is your salary. <br /> | Da",
             "privacy": {
               "enabled": false
             },
@@ -2059,6 +1970,50 @@
               }
             },
             "variable": "digression_failure",
+            "condition": {
+              "eq": [
+                {
+                  "system_variable": "fallback_reason"
+                },
+                {
+                  "scalar": "Failed to confirm topic return"
+                }
+              ]
+            },
+            "next_step": "step_259"
+          },
+          {
+            "step": "step_259",
+            "output": {
+              "generic": [
+                {
+                  "values": [
+                    {
+                      "text": "Sorry I couldn't confirm if you wanted to return to previous topic, let me connect to an agent."
+                    }
+                  ],
+                  "response_type": "text",
+                  "selection_policy": "sequential"
+                }
+              ]
+            },
+            "handlers": [],
+            "resolver": {
+              "type": "connect_to_agent",
+              "response": {
+                "transfer_info": {
+                  "target": {}
+                },
+                "agent_available": {
+                  "message": "Let's send you to an available agent."
+                },
+                "agent_unavailable": {
+                  "message": "There are no agents available at this time. When one becomes available, we'll connect you."
+                },
+                "message_to_human_agent": ""
+              }
+            },
+            "variable": "step_259",
             "condition": {
               "eq": [
                 {
@@ -2328,6 +2283,14 @@
             "title": "Profanity - It seems this conversation",
             "variable": "step_005",
             "data_type": "any"
+          },
+          {
+            "title": "Sorry I couldn't confirm if you wanted to return to previous top",
+            "privacy": {
+              "enabled": true
+            },
+            "variable": "step_259",
+            "data_type": "any"
           }
         ],
         "next_action": "run_always",
@@ -2454,7 +2417,7 @@
             "data_type": "any"
           }
         ],
-        "next_action": "action_32107",
+        "next_action": "action_20548-2",
         "disambiguation_opt_out": true
       }
     ],
@@ -2473,20 +2436,6 @@
           },
           {
             "text": "การลาของพนักงาน"
-          }
-        ]
-      },
-      {
-        "intent": "action_32107_intent_36908",
-        "examples": [
-          {
-            "text": "contact"
-          },
-          {
-            "text": "please call xyz for me"
-          },
-          {
-            "text": "telephone call"
           }
         ]
       },
@@ -2791,7 +2740,7 @@
         "data_type": "string",
         "description": "The ID of the model to be used for this user prompt. Please refer to the list of models at https://bam.res.ibm.com/docs/models",
         "initial_value": {
-          "scalar": "meta-llama/llama-2-70b-chat"
+          "scalar": "google/flan-ul2"
         }
       },
       {
@@ -2802,11 +2751,14 @@
       },
       {
         "title": "model_parameters_max_new_tokens",
+        "privacy": {
+          "enabled": false
+        },
         "variable": "model_parameters_max_new_tokens",
         "data_type": "number",
         "description": "The maximum number of new tokens to be generated.",
         "initial_value": {
-          "scalar": 300
+          "scalar": 600
         }
       },
       {
@@ -2829,12 +2781,12 @@
       },
       {
         "title": "model_parameters_stop_sequences",
+        "privacy": {
+          "enabled": false
+        },
         "variable": "model_parameters_stop_sequences",
         "data_type": "any",
-        "description": "",
-        "initial_value": {
-          "expression": "[ \"\\n\\n\"]"
-        }
+        "description": ""
       },
       {
         "title": "model_parameters_temperature",
@@ -2916,9 +2868,18 @@
       }
     ],
     "data_types": [],
-    "collections": [],
+    "collections": [
+      {
+        "title": "test",
+        "collection": "collection_19814",
+        "action_references": []
+      }
+    ],
     "counterexamples": [],
     "system_settings": {
+      "nlp": {
+        "model": "latest"
+      },
       "variable": {
         "format": {
           "time": {
@@ -2931,6 +2892,22 @@
       },
       "off_topic": {
         "enabled": true
+      },
+      "launch_mode": {
+        "default": "confident",
+        "enabled": true,
+        "learning": {
+          "step_retry_threshold": 2,
+          "use_connect_to_support": "more_often",
+          "single_answer_clarification": "more_often",
+          "disambiguation_clarification": "more_often"
+        },
+        "confident": {
+          "step_retry_threshold": 4,
+          "use_connect_to_support": "sometimes",
+          "single_answer_clarification": "sometimes",
+          "disambiguation_clarification": "sometimes"
+        }
       },
       "topic_switch": {
         "enabled": true,
@@ -3023,5 +3000,6 @@
   "assistant_id": "814ab21c-6bc5-46ee-9d6f-6d551d3208a7",
   "workspace_id": "01d421a1-acb3-4986-98a2-ce832a2098c7",
   "dialog_settings": {},
-  "next_snapshot_version": "1"
+  "next_snapshot_version": "1",
+  "environment_id": "22f5920f-1246-462f-b91d-f57e747d550b"
 }

@@ -7,7 +7,7 @@
     },
     "servers": [
       {
-        "url": "https://customer-wa-demo.1aqmhhany2xq.us-south.codeengine.appdomain.cloud",
+        "url": "https://itmx-customer-demo.1aqmhhany2xq.us-south.codeengine.appdomain.cloud/",
         "description": "IP address and port without encryption/authentication",
         "variables": {
           "local_url": {
