@@ -17,6 +17,15 @@ def question_to_sql():
     results = {"results": "SELECT SUM(REVENUE) FROM TRANSACTION WHERE REVENUE_TYPE='JEWERY';"}
     return results
 
+@app.route('/trigger_visualization', methods=['POST'])
+def trigger_visualization():
+    data = request.json
+    status = data['status']
+    if status == 'yes':
+        pass
+      # save to variable or csv so front end knows
+    results = {'results': 'Successfully connected'}
+    return results
 
 if __name__ == '__main__':
     app.run(debug=True, port=8001, host="0.0.0.0")
